@@ -14,21 +14,12 @@ public ThreadMultiplicacion(double[][] matriz, double[] vector, int posicion ) {
 }
 	
 public void run() {
-	//multiplicamos la matriz por el vector, si es la primera vez que multiplica, entra en el primer bucle, si no, va al segundo. Esto se debe a que si no multiplicaria solo la primera fila
-	if(posicion == 0) {
-		for(int i = posicion; i < matriz.length - (matriz.length-1); i ++) {
+	//multiplicamos la matriz por el vector
+	for(int i = posicion; i < posicion + 1; i++){
 			for(int j = 0; j < matriz[i].length; j ++) {
 				matriz[i][j] = matriz[i][j] * vector[j];
 			}
+			i = i +1;
 		}
-
-	}else {
-		for(int i = posicion; i < posicion + 1; i++){
-			for(int j = 0; j < matriz[i].length; j ++) {
-				matriz[i][j] = matriz[i][j] * vector[j];
-			}
-		}
-}
-
 	}
 }
