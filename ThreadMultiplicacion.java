@@ -1,5 +1,7 @@
 package practica2;
 
+
+
 public class ThreadMultiplicacion extends Thread{//creamos el metodo constructor
 	private double [][] matriz; //le pasamos la matriz (filas y columnas)
 	private double [] vector; //y el vector por el cual vamos a multiplicar la matriz
