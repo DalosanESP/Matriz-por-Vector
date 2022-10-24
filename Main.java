@@ -1,43 +1,38 @@
 package practica2;
 
-//preguntar syncronizwe
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
-		double[] vector = new double[3];// Generamos un vector con las dimensiones que queremos
-		double[] resultado = new double[3];
-		for (int i = 0; i < vector.length; i++) {// generamos un bucle para rellenar dicho vector
-			vector[i] = i + 1;
+		DatosCompartidos dc = new DatosCompartidos();
+		
+		//Generamos una lista de threads para multiplicar la matriz por el vector
+		ThreadMultiplicacion[] Multiplicacion = new ThreadMultiplicacion[16];
+		
+		//Con los datos de DatosCompartidos instanciamos el vector y la matriz
+		dc.rellenar();
+		
+		//Creamos un numero de procesos que sea equivalente a la longitud del vector
+		int posicionInicial = 0;
+		int posicionFinal = 32;
+		for (int i = 0; i < Multiplicacion.length; i++) {							
+			Multiplicacion[i] = new ThreadMultiplicacion( dc, posicionInicial,posicionFinal);
+			posicionInicial += 32;
+			posicionFinal += 32;
 		}
-
-		ThreadMultiplicacion[] Multiplicacion = new ThreadMultiplicacion[3];// creamos una lista de procesos
-		double[][] matriz = new double[3][3]; // y un vector bidimensional (las filas y las columnas)
-
-		for (int i = 0; i < matriz.length; i++) {// generamos este bucle para rellenar las filas y las columnas
-			for (int j = 0; j < matriz[i].length; j++) {
-				matriz[i][j] = (int) (Math.random() * 100);// rellenamos las casillas con numeros aleatorios
-			}
-		}
-
-		for (int i = 0; i < Multiplicacion.length; i++) {// rellenamos la lista de los procesos con el
-															// ThreadMultiplicacion tantas veces como queramos
-			Multiplicacion[i] = new ThreadMultiplicacion(matriz, vector, i, resultado);// la llamamos y le pasamos los
-																						// parametros
-		}
-
-		for (ThreadMultiplicacion threadMultiplicacion : Multiplicacion) {// iniciamos el proceso
+		
+		//Iniciamos los threads
+		for (ThreadMultiplicacion threadMultiplicacion : Multiplicacion) {
 			threadMultiplicacion.start();
 		}
-
+		
+		//Esperamos a que todo acaben para que el main continue
 		for (ThreadMultiplicacion threadMultiplicacion : Multiplicacion) {
 			threadMultiplicacion.join();
-		}
-		for (int i = 0; i < resultado.length; i++) {
-			System.out.println(resultado[i]);
-		} // multilicacion
+		} 
 
-		ThreadMostrar Mostrar = new ThreadMostrar(resultado);
-		Mostrar.start();
-		Mostrar.join();
+		//Instanciamos Mostrar, lo iniciamos y esperamos a que acabe para que el main continue
+		ThreadModulo Modulo = new ThreadModulo(dc.resultado, Multiplicacion);
+		Modulo.start();
+		Modulo.join();
 	}
-
 }
+
